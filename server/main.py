@@ -9,15 +9,15 @@ from rich.progress import Progress
 class RobotPanel():
     def __init__(self, roboid):
         self.roboid = roboid
-        self.HOSTS = ['192.168.50.246']
-        self.PORT = 5555
+        self.HOSTS = ['192.168.50.246', '192.168.50.245']
+        self.PORTS = ['5555', '5556']
 
         self.robot_socket = None
         self.send_data = False
 
     def connect(self):
         self.robot_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.robot_socket.connect((self.HOSTS[self.roboid], self.PORT))
+        self.robot_socket.connect((self.HOSTS[self.roboid], int(self.PORTS[self.roboid])))
     
     def handshake(self):
         while True:
@@ -41,7 +41,7 @@ class RobotPanel():
 
 if __name__ == "__main__":
     try:
-        panel = RobotPanel(0)
+        panel = RobotPanel(1)
         panel.main()
     except KeyboardInterrupt:
         rich.print("[bold red]Shutting down...[/bold red]")
