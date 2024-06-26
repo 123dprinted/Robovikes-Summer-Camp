@@ -1,25 +1,47 @@
-from tkinter import *
-import customtkinter as ctk
+import time
+import socket
+
+import rich
+import rich.progress
+
+from rich.progress import Progress
 
 class RobotPanel():
-    def __init__(self):
-        self.root = ctk.CTk()
-        self.root.geometry('820x450')
-        
-        ctk.set_appearance_mode("dark")
+    def __init__(self, roboid):
+        self.roboid = roboid
+        self.HOSTS = ['192.168.50.246']
+        self.PORT = 5555
 
+        self.robot_socket = None
+        self.send_data = False
+
+    def connect(self):
+        self.robot_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.robot_socket.connect((self.HOSTS[self.roboid], self.PORT))
+    
+    def handshake(self):
+        while True:
+            data = self.robot_socket.recv(1024)
+
+            if data.decode('utf-8') == '-2':
+                rich.print(f"[bold green]Connection successful. Hello from robot[/bold green] {self.roboid}!") 
+                break
+    
+    def handle(self):
+        rich.print(f"[bold green]Connected to ID:[/bold green] {self.roboid}")
+
+        while True:
+            if self.send_data:
+                pass
 
     def main(self):
-        #empty main panel label
-        label = ctk.CTkLabel(master=self.root, text="Select a robot to view its options.", font=("Arial", 25))
-        label.grid(row=0, column=1)
-        #construct connection frame
-        frame = ctk.CTkFrame(master=self.root, width=200, height=450)
-        frame.grid(row=0, column=0)
-
-        self.root.mainloop()
-
+        self.connect()
+        self.handshake()
+        self.handle()
 
 if __name__ == "__main__":
-    panel = RobotPanel()
-    panel.main()
+    try:
+        panel = RobotPanel(0)
+        panel.main()
+    except KeyboardInterrupt:
+        rich.print("[bold red]Shutting down...[/bold red]")
