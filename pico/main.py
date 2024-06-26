@@ -47,6 +47,13 @@ class Robot():
             pico_led.on()
         
         self.server_socket.close()
+        
+    def blink(self, times, interval):
+        for x in range(times):
+            pico_led.on()
+            utime.sleep(interval)
+            pico_led.off()
+            utime.sleep(interval)
             
         
 if __name__ == "__main__":
@@ -60,7 +67,7 @@ if __name__ == "__main__":
         print(e)
         robot.wlan.disconnect()
         pico_led.off()
-        
+        robot.blink(3, 0.5)        
         
         
         
