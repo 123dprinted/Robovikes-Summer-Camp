@@ -10,7 +10,7 @@ class Robot():
         self.HEADERSIZE = 10
         self.PASSWORD = 'canham1020'
         self.SSID = 'stalag13_24ghz'
-        self.PORT = 5555
+        self.PORT = 5555 #change based on robot
         
         self.server_running = True
         self.server_socket = None
